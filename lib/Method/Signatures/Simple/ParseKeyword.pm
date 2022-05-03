@@ -61,8 +61,9 @@ sub import {
     }
 
     Parse::Keyword->import(\%kwds);
-    local $Exporter::ExportLevel = 1;
-    $class->SUPER::import(@EXPORT);
+    $Exporter::ExportLevel++;
+    $class->export_to_level($Exporter::ExportLevel, $caller, @EXPORT);
+    $Exporter::ExportLevel--;
 }
 
 sub parse_mode {
