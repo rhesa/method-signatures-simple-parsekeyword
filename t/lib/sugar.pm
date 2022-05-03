@@ -12,9 +12,7 @@ sub import {
 
     strict->import;
     warnings->import;
-    $Exporter::ExportLevel++;
-    Method::Signatures::Simple::ParseKeyword->import();
-    $Exporter::ExportLevel--;
+    Method::Signatures::Simple::ParseKeyword->import(into => $caller);
 }
 
 1;

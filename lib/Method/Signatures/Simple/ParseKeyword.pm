@@ -23,6 +23,7 @@ sub import {
 
     my %kwds;
 
+    my $into = delete $args{into} || $caller;
     my $inv = delete $args{invocant} || '$self';
     my $meth = delete $args{name} || delete $args{method_keyword};
     my $func = delete $args{function_keyword};
@@ -61,9 +62,13 @@ sub import {
     }
 
     Parse::Keyword->import(\%kwds);
-    $Exporter::ExportLevel++;
-    $class->export_to_level($Exporter::ExportLevel, $caller, @EXPORT);
-    $Exporter::ExportLevel--;
+    for my $e (@EXPORT) {
+        my $n = $e =~ s/[$%@]//r;
+        my $fn = $into. '::' . $n;
+        no strict 'refs';
+        *$fn = $e;
+        my $k = *$fn; # avoid 'once' warning
+    }
 }
 
 sub parse_mode {
