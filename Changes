@@ -1,0 +1,4 @@
+Revision history for Method-Signatures-Simple-ParseKeyword
+
+1.09    2022-05-02  Rhesa Rozendaal <rhesa@cpan.org>
+        Ported Method::Signatures::Simple to Parse::Keyword
