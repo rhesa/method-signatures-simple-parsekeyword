@@ -128,7 +128,7 @@ sub parse_signature {
     my ($invocant) = @_;
     lex_read_space;
 
-    my @vars = $invocant ? ({ index => 0, name => $invocant }) : ();
+    my @vars = $invocant ? ({ index => 0, name => $invocant, is_inv => 1 }) : ();
     return \@vars unless lex_peek eq '(';
 
     my @attr = ();
@@ -269,6 +269,12 @@ sub parse_body {
             my $preamble = '{';
 
             # arguments / query params
+            #
+            # if this is a method, unshift the invocant from @_
+            if (@$sigs && $sigs->[0]{is_inv}) {
+                $preamble .= "my $sigs->[0]{name} = shift;";
+                shift @$sigs;
+            }
             my @names = map { $_->{name} } @$sigs;
             $preamble .= 'my (' . join(', ', @names) . ') = @_;';
 
