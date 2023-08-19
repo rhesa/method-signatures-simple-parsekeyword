@@ -15,6 +15,7 @@ use Sub::Name 'subname';
 use Parse::Keyword {};
 our @EXPORT;
 our %MAP;
+$Carp::Internal{ (__PACKAGE__) }++;
 
 sub import {
     my $caller = caller;
@@ -143,9 +144,9 @@ sub parse_signature {
     my $seen_slurpy;
     while ((my $sigil = lex_peek) ne ')') {
         my $var = {};
-        die "syntax error"
+        croak qq{syntax error: expected sigil instead of "$sigil"}
             unless $sigil eq '$' || $sigil eq '@' || $sigil eq '%';
-        die "Can't declare parameters after a slurpy parameter"
+        croak "Can't declare parameters after a slurpy parameter"
             if $seen_slurpy;
 
         $seen_slurpy = 1 if $sigil eq '@' || $sigil eq '%';
@@ -174,7 +175,7 @@ sub parse_signature {
 
         push @vars, $var;
 
-        die "syntax error"
+        croak qq{syntax error: expected ')' or ',' instead of "} . lex_peek . q{"}
             unless lex_peek eq ')' || lex_peek eq ',';
 
         if (lex_peek eq ',') {
