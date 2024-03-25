@@ -58,7 +58,7 @@ sub import {
         my $parse = "parse_$meth";
         *$parse = sub { my ($kw) = @_; parse_mode($kw); };
         $MAP{$meth} = $inv;
-        @kwds{ $meth } = \&$parse;
+        $kwds{ $meth } = \&$parse;
         push @EXPORT, $meth;
     }
 
